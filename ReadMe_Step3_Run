@@ -1,0 +1,29 @@
+
+# setup
+set.seed(101)
+n <- 1000
+ngpu <- 4
+K <- matrix(sample(c(0,1), n*n, T), nrow=n)
+res <- tcrossprod(K)
+
+# GPU based
+ library(MagmaEigen)
+ MagmaEigen::RunServer( matrixMaxDimension=n,  numGPUsWanted=ngpu, memName="/syevd_mem", semName="/syevd_sem", print=0)
+
+  eigGPU <- MagmaEigen::eigen_mgpu(res , symmetric = TRUE  , only_values=FALSE)
+  indx <- order(eigGPU$values, decreasing=TRUE)
+   eigGPU$vectors <-  eigGPU$vectors[, indx]
+   eigGPU$values <- eigGPU$values[indx]
+
+  valuesGPU = eigGPU$values
+
+ ## CPU 
+   eig <- eigen(res)
+   valuesCPU = eig$values
+   vectorsCPU = eig$vectors
+
+
+   print(vectorsGPU[1:5, 1:5])
+   print("---------------------")
+   print(vectorsCPU[1:5, 1:5])
+

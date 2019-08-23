@@ -1,0 +1,5 @@
+useDynLib(MagmaEigen)
+exportPattern("^[[:alpha:]]+")
+import(Rcpp)
+
+
