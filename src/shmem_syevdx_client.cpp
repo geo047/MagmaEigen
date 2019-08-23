@@ -76,7 +76,7 @@ void StopServer( )
   }*/
 }
 
-//' Called when the package is unloaded or R terminated - it releases the shared memory objects that are used to communicate with the nonsyevd_server executable
+//' Called when the package is unloaded or R terminated - it releases the shared memory objects that are used to communicate with the syevd_server executable
 // [[Rcpp::export(name=".CleanupSharedMemory")]] 
 int CleanupSharedMemory(  )
 {
@@ -96,7 +96,7 @@ int CleanupSharedMemory(  )
 //' Initialise shared memory on client and obtain server launch string.
 //' @description This function will create a CSharedMemory object that initialises the shared memory region and the semaphore used for comms beteween client and server.
 //' If the object is already initialised it is removed and reinitialised. 
-//' Returns a string of the form "-n 10000 -v 1 -g 3 -m /syevx_<PID_of_client> -s /sem_<PID_of_client> -p" that can be used to launch a nonsyevd_server process
+//' Returns a string of the form "-n 10000 -v 1 -g 3 -m /syevx_<PID_of_client> -s /sem_<PID_of_client> -p" that can be used to launch a syevd_server process
 //' that will accept matrix data on which to perform eigenvalue decomposition 
 //' @param matrixDimension   - type (integer) - the dimension of the (assumed square) matrix
 //' @param numGPUsWanted     - type (string)  - The number of GPUs to use in for the non-symmetric eigenvalue (syevd) computation
@@ -104,7 +104,7 @@ int CleanupSharedMemory(  )
 //' @param memName           - type (string)  - a name to give to the named shared memory region (will be created in /dev/shm/) and defaults to the user name if nothing specified
 //' @param semName           - type (string)  - a name to give to the semaphore (will be placed in /dev/shm) and defaults to the user name if nothing specified
 //' @param printDetails      - type (integer 0|1|2) - 0 = don't print, 1 = print details of server progress to screen; 2 = print to log (not functional)
-//' @return                  - type (string) A string that can be used a command line arguments to run the nonsyevd_server executable
+//' @return                  - type (string) A string that can be used a command line arguments to run the syevd_server executable
 // [[Rcpp::export(rng=false)]] 
 std::string GetServerArgs(int matrixDimension, bool withVectors, int numGPUsWanted, std::string memName, std::string semName , int printDetails)
 {
@@ -148,7 +148,7 @@ std::string GetServerArgs(int matrixDimension, bool withVectors, int numGPUsWant
   Rcpp::Function pathpackage_rcpp = Rcpp::Environment::base_env()["path.package"];  // get the R function "path.package()"
 	SEXP retvect = pathpackage_rcpp ("MagmaEigen");  // use the R function in C++ 
 	serverpathstring = Rcpp::as<std::string>(retvect) ; // convert from SEXP to C++ type
-	serverpathstring = serverpathstring + "/bin/nonsyevd_server.exe" ;
+	serverpathstring = serverpathstring + "/bin/syevd_server.exe" ;
   if (!exists(serverpathstring))
   {
     ss_string << " MAGMA_EVD_CLIENT Error: MagmaEigen::GetServerArgs()  " << std::endl ;
@@ -176,7 +176,7 @@ std::string GetServerArgs(int matrixDimension, bool withVectors, int numGPUsWant
     ss_string << " -p " ;
   
   if (main_args.msgChannel == PRINT ) _PRINTSTD << " MAGMA_EVD_CLIENT Info: Server launching string: " << ss_string.str() << std::endl ;
-  // 	"<R_HOME>/library/bin/nonsyevd_server -n 10000 -v 1 -g 3 -m /syevx_<PID_of_client> -s /sem_<PID_of_client>"
+  // 	"<R_HOME>/library/bin/syevd_server -n 10000 -v 1 -g 3 -m /syevx_<PID_of_client> -s /sem_<PID_of_client>"
   
 	return(ss_string.str()) ;
 	

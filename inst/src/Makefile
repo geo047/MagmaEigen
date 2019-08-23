@@ -32,7 +32,7 @@ syevd_server.exe: $(OBJS)
 	$(CXX) $(LDFLAGS) -o syevd_server.exe $(OBJS) $(LIB) 
 
 install:
-	mkdir ../bin
+	mkdir -p ../bin
 	mv syevd_server.exe ../bin
 
 clean:

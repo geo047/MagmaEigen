@@ -20,7 +20,7 @@ The default platform string is stored in a file in <R library path>/rcppMagamSYE
 If these libraries and variables are set correctly then the server side code will be compiled automatically when the package is installed. If failing installation on install then whenerver the package is loaded into the R environment using library(MagmaEigen) the system will attempt to compile the server code.
 
 
-N.B. Calling the eigen_nonsym_mgpu() function with argument overwrite=TRUE will cause an *overwrite of the input matrix data* with the eigenvectors of the original matrix data (if they are requested). This is done to potentialy reduce the memory footprint of the function. If overwrite=TRUE then please ensure the original matrix is copied if the data needs to be used after the function is called. Using overwrite=FALSE will return the usual list of results in $vectors and $values list items of the result object.
+N.B. Calling the eigen_mgpu() function with argument overwrite=TRUE will cause an *overwrite of the input matrix data* with the eigenvectors of the original matrix data (if they are requested). This is done to potentialy reduce the memory footprint of the function. If overwrite=TRUE then please ensure the original matrix is copied if the data needs to be used after the function is called. Using overwrite=FALSE will return the usual list of results in $vectors and $values list items of the result object.
 
 }
 \details{
@@ -89,7 +89,7 @@ eigen
 }
 \examples{
 
-  n  <- 1000
+  n  <- 100
   library(MagmaEigen)
   RunServer(numGPUsWanted=1, matrixMaxDimension=n, memName="/syevd_mem", semName="/syevd_sem", print=0)
   set.seed(42)
